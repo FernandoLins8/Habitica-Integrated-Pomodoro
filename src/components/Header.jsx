@@ -50,10 +50,8 @@ export function Header() {
       <header className="w-full flex justify-end p-4">
 
         <Dialog.Root>
-          <Dialog.Trigger>
-          <Button>
+          <Dialog.Trigger className="px-4 h-10 inline-block rounded-md my-2 bg-indigo-500 text-white text-sm border hover:opacity-95 active:scale-105" >
             Login
-          </Button>
           </Dialog.Trigger>
           <Dialog.Portal>
             <Dialog.Overlay className="w-full absolute top-0 bottom-0 bg-black opacity-70" />
