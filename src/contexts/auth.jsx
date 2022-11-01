@@ -13,16 +13,8 @@ export function AuthProvider({ children }) {
     const apiToken = localStorage.getItem('@App:apiToken')
     const taskId = localStorage.getItem('@App:taskId')
 
-    
-    if(userId && apiToken) {
-      setUser({ userId, apiToken })
-      
-      if(taskId) {
-        setUser({
-          ...user,
-          taskId
-        })
-      }
+    if(userId && apiToken && taskId) {
+      setUser({ userId, apiToken, taskId })      
     }
   }, [])
 
@@ -47,8 +39,6 @@ export function AuthProvider({ children }) {
       alert('Success! Task created.')
       const resData = await res.json()
       const createdTaskId = resData.data.id
-
-      console.log(createdTaskId)
 
       setUser({
         userId,

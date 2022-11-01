@@ -3,8 +3,11 @@ import { useTimer } from 'react-timer-hook'
 import { Timer } from "./Timer";
 import { Button } from "./Button";
 import { TimerSettings } from "./TimerSettings";
+import { useAuth } from "../contexts/auth";
 
 export function TimerWrapper() {
+  const { isSigned, user } = useAuth()
+  
   const [pomodoroDurations, setPomodoroDurations] = useState({
     'pomodoro-duration': 25,
     'short-rest-duration': 5,
@@ -24,7 +27,7 @@ export function TimerWrapper() {
     restart,
     pause,
     resume,
-  } = useTimer({ expiryTimestamp: time, onExpire: () => alert('opa')})
+  } = useTimer({ expiryTimestamp: time, onExpire: handlePomodoroCompleted})
 
   function handleStartCountdown() {
     resume()
@@ -51,10 +54,32 @@ export function TimerWrapper() {
     const time = new Date()
     time.setSeconds(time.getSeconds() + pomodoroDurations['pomodoro-duration'] * 60)
 
-    console.log(pomodoroDurations['pomodoro-duration'])
-
     restart(time, false)
     setIsTimerStarted(false)
+  }
+
+  async function handlePomodoroCompleted() {
+    if(isSigned &&
+         user.taskId &&
+         user.apiToken &&
+         user.userId
+      ) {
+      const res = await fetch(`https://habitica.com/api/v3/tasks/${user.taskId}/score/up`, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+          'x-api-key': user.apiToken,
+          'x-api-user': user.userId
+        },
+      })
+      const resData = await res.json()
+
+      if(!resData.success) {
+        alert('Failed to score task.')
+      }
+    }
+
+    alert('Pomodoro Completed!')
   }
 
   useEffect(() => {
