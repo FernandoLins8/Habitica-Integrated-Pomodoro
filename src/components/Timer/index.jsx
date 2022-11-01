@@ -3,8 +3,8 @@ import 'react-circular-progressbar/dist/styles.css';
 
 import './styles.css'
 
-export function Timer({ minutes, seconds, total }) {
-  const secondsRemaining = (minutes * 60) + seconds
+export function Timer({ hours, minutes, seconds, total }) {
+  const secondsRemaining = (hours * 60 * 60) + (minutes * 60) + seconds
   const secondsPassed = total - secondsRemaining
   const percentageCompleted = (secondsPassed * 100) / total
   
@@ -27,6 +27,8 @@ export function Timer({ minutes, seconds, total }) {
         <p>Time to Focus</p>
         <p className="text-3xl">
         {
+          hours === 1 ?
+          `60:${String(seconds).padStart(2, '0')}` :
           `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
         }
         </p>
